@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../config/global.params.dart';
 
@@ -10,7 +11,16 @@ class MyDrawer extends StatelessWidget {
           return ListTile(
             title: Text(item['title']),
             leading: item['icon'],
-            onTap: () => Navigator.pushNamed(context, item['route']),
+            onTap: () async {
+              if('${item['title']}' != "Déconnexion"){
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, "${item['route']}");
+              }
+              else{
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pushNamedAndRemoveUntil("/auth", (Route<dynamic> route) => false);
+              }
+            },
           );
         }).toList(),
       ),

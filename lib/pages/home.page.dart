@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../menu/drawer.widget.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,5 +14,10 @@ class HomePage extends StatelessWidget {
       drawer: MyDrawer(),
       body: Center(child: Text("Bienvenue dans le DME intelligent")),
     );
+  }
+
+  Future<void> _Deconnexion(context) async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushNamedAndRemoveUntil(context, '/inscription', (route) => false);
   }
 }

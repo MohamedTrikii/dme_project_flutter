@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "998290674309",
+    "project_id": "voyage-bfd11",
+    "storage_bucket": "voyage-bfd11.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:998290674309:android:2b95cd9fb55c6581d04fec",
+        "android_client_info": {
+          "package_name": "com.example.atelier3"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoVVr-l86DlhG90GNW20cgLsRNzR1O1cE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:998290674309:android:6dffeb79860c27d9d04fec",
+        "android_client_info": {
+          "package_name": "com.iit.dme.dme_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoVVr-l86DlhG90GNW20cgLsRNzR1O1cE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
