@@ -8,13 +8,10 @@ class PatientService {
   // Get all patients
   Future<List<Patient>> listePatients() async {
     QuerySnapshot snapshot =
-    await _firestore.collection(collectionName).get();
+    await FirebaseFirestore.instance.collection(collectionName).get();
 
     return snapshot.docs.map((doc) {
-      return Patient.fromJson({
-        "id": doc.id,
-        ...doc.data() as Map<String, dynamic>,
-      });
+      return Patient.fromFirestore(doc);
     }).toList();
   }
 

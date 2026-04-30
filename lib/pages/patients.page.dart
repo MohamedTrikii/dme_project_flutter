@@ -54,11 +54,23 @@ class _PatientsPageState extends State<PatientsPage> {
     );
   }
 
-  _fetchData() {
+  FutureBuilder<List<Patient>> _fetchData() {
     return FutureBuilder<List<Patient>>(
       future: patientService.listePatients(),
       builder: (BuildContext context, AsyncSnapshot<List<Patient>> patients) {
         if (patients.hasData) return _buildDataTable(patients.data!);
+        if (patients.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        if (patients.hasError) {
+          print(patients.error);
+          return Text("Erreur");
+        }
+
+        if (!patients.hasData || patients.data!.isEmpty) {
+          return Text("Aucun patient");
+        }
         return Center(child: CircularProgressIndicator());
       },
     );

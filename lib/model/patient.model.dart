@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Patient {
   String? id;
   String? nom;
@@ -26,6 +28,20 @@ class Patient {
       email: json['email'],
       tel: json['tel'],
       diagnostic: json['diagnostic'],
+    );
+  }
+
+  factory Patient.fromFirestore(QueryDocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+
+    return Patient(
+      id: doc.id,
+      nom: data['nom'],
+      prenom: data['prenom'],
+      cin: data['data'],
+      email: data['email'],
+      tel: data['tel'],
+      diagnostic: data['diagnostic'],
     );
   }
 
