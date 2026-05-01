@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:google_mlkit_translation/google_mlkit_translation.dart';
+import 'package:google_mlkit_language_id/google_mlkit_language_id.dart';
 
 import '../model/patient.model.dart';
 import 'ajout_modif_patient.page.dart';
@@ -19,10 +21,12 @@ class _OCRPageState extends State<OCRPage> {
 
   File? imageFile;
   String result = "";
+  String translatedText = "";
   bool isLoading = false;
+  bool isTranslating = false;
 
   // ==========================
-  // SIMPLE TEXT PARSER
+  // EXTRACT PATIENT DATA
   // ==========================
   Patient extractPatient(String text) {
     String nom = "";
@@ -31,12 +35,12 @@ class _OCRPageState extends State<OCRPage> {
     List<String> lines = text.split("\n");
 
     for (var line in lines) {
-      line = line.toLowerCase();
+      final lower = line.toLowerCase();
 
-      if (line.contains("nom")) {
-        nom = line.replaceAll("nom", "").trim();
-      } else if (line.contains("prenom")) {
-        prenom = line.replaceAll("prenom", "").trim();
+      if (lower.contains("nom")) {
+        nom = line.replaceAll(RegExp(r'(?i)nom'), "").trim();
+      } else if (lower.contains("prenom")) {
+        prenom = line.replaceAll(RegExp(r'(?i)prenom'), "").trim();
       }
     }
 
@@ -47,26 +51,75 @@ class _OCRPageState extends State<OCRPage> {
     );
   }
 
+  // ==========================
+  // TRANSLATION
+  // ==========================
+  Future<void> translateText() async {
+    if (result.isEmpty) return;
+
+    setState(() {
+      isTranslating = true;
+    });
+
+    final languageIdentifier =
+    LanguageIdentifier(confidenceThreshold: 0.5);
+
+    final detectedLang =
+    await languageIdentifier.identifyLanguage(result);
+
+    TranslateLanguage source;
+
+    switch (detectedLang) {
+      case "ar":
+        source = TranslateLanguage.arabic;
+        break;
+      case "en":
+        source = TranslateLanguage.english;
+        break;
+      default:
+        source = TranslateLanguage.french;
+    }
+
+    final translator = OnDeviceTranslator(
+      sourceLanguage: source,
+      targetLanguage: TranslateLanguage.french,
+    );
+
+    final output = await translator.translateText(result);
+
+    await translator.close();
+    languageIdentifier.close();
+
+    setState(() {
+      translatedText = output;
+      isTranslating = false;
+    });
+  }
+
+  // ==========================
+  // CONFIRMATION DIALOG
+  // ==========================
   Future<void> showConfirmationDialog(Patient patient) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text("Confirmer les données"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Nom: ${patient.nom ?? "-"}"),
-              Text("Prénom: ${patient.prenom ?? "-"}"),
-              const SizedBox(height: 10),
-              const Text("Diagnostic:"),
-              Text(
-                patient.diagnostic ?? "-",
-                maxLines: 5,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Nom: ${patient.nom ?? "-"}"),
+                Text("Prénom: ${patient.prenom ?? "-"}"),
+                const SizedBox(height: 10),
+                const Text("Diagnostic:"),
+                Text(
+                  patient.diagnostic ?? "-",
+                  maxLines: 5,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
           actions: [
             TextButton(
@@ -86,18 +139,21 @@ class _OCRPageState extends State<OCRPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              AjoutModifPatientPage(patient: patient, modifMode: false),
+          builder: (context) => AjoutModifPatientPage(
+            patient: patient,
+            modifMode: false,
+          ),
         ),
       );
     }
   }
 
   // ==========================
-  // OCR + REDIRECT
+  // OCR PROCESS
   // ==========================
   Future<void> scanImage() async {
-    final XFile? picked = await picker.pickImage(source: ImageSource.camera);
+    final XFile? picked =
+    await picker.pickImage(source: ImageSource.camera);
 
     if (picked == null) return;
 
@@ -105,15 +161,16 @@ class _OCRPageState extends State<OCRPage> {
       imageFile = File(picked.path);
       isLoading = true;
       result = "";
+      translatedText = "";
     });
 
-    final inputImage = InputImage.fromFilePath(picked.path);
+    final inputImage =
+    InputImage.fromFilePath(picked.path);
 
-    final TextRecognizer textRecognizer = TextRecognizer();
+    final textRecognizer = TextRecognizer();
 
-    final RecognizedText recognizedText = await textRecognizer.processImage(
-      inputImage,
-    );
+    final recognizedText =
+    await textRecognizer.processImage(inputImage);
 
     await textRecognizer.close();
 
@@ -125,31 +182,21 @@ class _OCRPageState extends State<OCRPage> {
       return;
     }
 
-    // ==========================
-    // EXTRACT DATA
-    // ==========================
-    Patient extracted = extractPatient(recognizedText.text);
-
     setState(() {
       result = recognizedText.text;
       isLoading = false;
     });
 
-    // ==========================
-    // SHOW CONFIRMATION
-    // ==========================
-    await showConfirmationDialog(extracted);
+    // OPTIONAL: auto-translate if not French
+    await translateText();
 
-    // ==========================
-    // REDIRECT TO FORM
-    // ==========================
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-            AjoutModifPatientPage(patient: extracted, modifMode: false),
-      ),
-    );
+    // Extract using translated text if available
+    final textToUse =
+    translatedText.isNotEmpty ? translatedText : result;
+
+    final patient = extractPatient(textToUse);
+
+    await showConfirmationDialog(patient);
   }
 
   // ==========================
@@ -187,6 +234,16 @@ class _OCRPageState extends State<OCRPage> {
               ),
             ),
 
+            const SizedBox(height: 10),
+
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: translateText,
+                child: const Text("Traduire le texte"),
+              ),
+            ),
+
             const SizedBox(height: 20),
 
             Expanded(
@@ -194,11 +251,34 @@ class _OCRPageState extends State<OCRPage> {
                 child: isLoading
                     ? const CircularProgressIndicator()
                     : SingleChildScrollView(
-                        child: Text(
-                          result,
-                          style: const TextStyle(fontSize: 16),
-                        ),
+                  child: Column(
+                    crossAxisAlignment:
+                    CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Texte détecté:",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold),
                       ),
+                      Text(result),
+
+                      const SizedBox(height: 20),
+
+                      if (isTranslating)
+                        const CircularProgressIndicator(),
+
+                      if (translatedText.isNotEmpty) ...[
+                        const Text(
+                          "Texte traduit:",
+                          style: TextStyle(
+                              fontWeight:
+                              FontWeight.bold),
+                        ),
+                        Text(translatedText),
+                      ],
+                    ],
+                  ),
+                ),
               ),
             ),
           ],
