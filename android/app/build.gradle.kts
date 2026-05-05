@@ -1,42 +1,42 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
-    id("dev.flutter.flutter-gradle-plugin")
     id("com.google.gms.google-services")
 }
 
+// Configuration spécifique à Flutter 3.10
+val flutterRoot = project.property("flutter.sdk") as String
+apply(from = "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle")
+
 android {
     namespace = "com.iit.dme.dme_flutter"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 35 // Support pour les plugins récents
+
+    defaultConfig {
+        applicationId = "com.iit.dme.dme_flutter"
+        minSdk = 23
+        targetSdk = 35
+        versionCode = 1
+        versionName = "1.0"
+        multiDexEnabled = true
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-
-        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-
-    defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.iit.dme.dme_flutter"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        jvmTarget = "17"
     }
 
     buildTypes {
+        getByName("debug") {
+            signingConfig = signingConfigs.getByName("debug")
+        }
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            isMinifyEnabled = false
+            isShrinkResources = false
             signingConfig = signingConfigs.getByName("debug")
         }
     }
@@ -47,23 +47,7 @@ flutter {
 }
 
 dependencies {
-
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
-
-    // Import the Firebase BoM
-
-    implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
-
-
-    // TODO: Add the dependencies for Firebase products you want to use
-
-    // When using the BoM, don't specify versions in Firebase dependencies
-
-    implementation("com.google.firebase:firebase-analytics")
-
-
-    // Add the dependencies for any other desired Firebase products
-
-    // https://firebase.google.com/docs/android/setup#available-libraries
-
+    implementation("com.google.mlkit:text-recognition:16.0.1")
+    implementation("com.google.mlkit:face-detection:16.1.7")
+    implementation("com.google.mlkit:barcode-scanning:17.3.0")
 }
