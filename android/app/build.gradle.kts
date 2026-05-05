@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
+    id("dev.flutter.flutter-gradle-plugin")
     id("com.google.gms.google-services")
 }
 
@@ -14,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId = "com.iit.dme.dme_flutter"
-        minSdk = 23
+        minSdk = flutter.minSdkVersion
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
