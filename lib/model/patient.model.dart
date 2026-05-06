@@ -21,13 +21,13 @@ class Patient {
 
   factory Patient.fromJson(Map<String, dynamic> json) {
     return Patient(
-      id: json['id'],
-      nom: json['nom'],
-      prenom: json['prenom'],
-      cin: json['cin'],
-      email: json['email'],
-      tel: json['tel'],
-      diagnostic: json['diagnostic'],
+      id: json['id']?.toString(),
+      nom: json['nom']?.toString(),
+      prenom: json['prenom']?.toString(),
+      cin: json['cin']?.toString(),
+      email: json['email']?.toString(),
+      tel: json['tel']?.toString(),
+      diagnostic: json['diagnostic']?.toString(),
     );
   }
 
@@ -36,12 +36,12 @@ class Patient {
 
     return Patient(
       id: doc.id,
-      nom: data['nom'],
-      prenom: data['prenom'],
-      cin: data['data'],
-      email: data['email'],
-      tel: data['tel'],
-      diagnostic: data['diagnostic'],
+      nom: data['nom']?.toString(),
+      prenom: data['prenom']?.toString(),
+      cin: data['cin']?.toString(),
+      email: data['email']?.toString(),
+      tel: data['tel']?.toString(),
+      diagnostic: data['diagnostic']?.toString(),
     );
   }
 

@@ -28,9 +28,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/authentification',
+      initialRoute: '/auth',
       routes: {
-        '/authentification': (context) => AuthentificationPage(),
+        '/auth': (context) => AuthentificationPage(),
         '/inscription': (context) => InscriptionPage(),
         '/home': (context) => HomePage(),
         '/ocr': (context) => OCRPage(),
