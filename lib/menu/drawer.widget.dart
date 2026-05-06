@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../config/global.params.dart';
 
 class MyDrawer extends StatelessWidget {
+  const MyDrawer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -12,14 +14,21 @@ class MyDrawer extends StatelessWidget {
             title: Text(item['title']),
             leading: item['icon'],
             onTap: () async {
-              if('${item['title']}' != "Déconnexion"){
+              final title = item['title'].toString();
+              final route = item['route'].toString();
+
+              if (title != 'Déconnexion') {
                 Navigator.of(context).pop();
-                Navigator.pushNamed(context, "${item['route']}");
+                Navigator.pushNamed(context, route);
+                return;
               }
-              else{
-                await FirebaseAuth.instance.signOut();
-                Navigator.of(context).pushNamedAndRemoveUntil("/auth", (Route<dynamic> route) => false);
-              }
+
+              await FirebaseAuth.instance.signOut();
+              if (!context.mounted) return;
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                '/authentification',
+                    (Route<dynamic> route) => false,
+              );
             },
           );
         }).toList(),
