@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../services/translation.service.dart';
 
 class InscriptionPage extends StatefulWidget {
   const InscriptionPage({super.key});
@@ -31,17 +32,17 @@ class _InscriptionPageState extends State<InscriptionPage> {
     final nom = nomController.text.trim();
 
     if (nom.isEmpty || email.isEmpty || password.isEmpty || confirm.isEmpty) {
-      showMessage("Veuillez remplir tous les champs");
+      showMessage(TranslationService.getString('fill_all_fields'));
       return;
     }
 
     if (password != confirm) {
-      showMessage("Les mots de passe ne correspondent pas");
+      showMessage(TranslationService.getString('passwords_dont_match'));
       return;
     }
 
     if (password.length < 6) {
-      showMessage("Mot de passe minimum 6 caractères");
+      showMessage(TranslationService.getString('password_too_short'));
       return;
     }
 
@@ -55,7 +56,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
         password: password,
       );
 
-      showMessage("Compte créé avec succès");
+      showMessage(TranslationService.getString('account_created_success'));
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
@@ -63,19 +64,19 @@ class _InscriptionPageState extends State<InscriptionPage> {
 
       switch (e.code) {
         case 'weak-password':
-          message = "Mot de passe trop faible";
+          message = TranslationService.getString('weak_password');
           break;
 
         case 'email-already-in-use':
-          message = "Cet email existe déjà";
+          message = TranslationService.getString('email_already_in_use');
           break;
 
         case 'invalid-email':
-          message = "Adresse email invalide";
+          message = TranslationService.getString('invalid_email');
           break;
 
         default:
-          message = "Erreur : ${e.message}";
+          message = "${TranslationService.getString('error')} : ${e.message}";
       }
 
       showMessage(message);
@@ -109,7 +110,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Inscription"),
+        title: Text(TranslationService.getString('create_account')),
         backgroundColor: Colors.green,
       ),
       body: SingleChildScrollView(
@@ -124,10 +125,10 @@ class _InscriptionPageState extends State<InscriptionPage> {
 
             TextField(
               controller: nomController,
-              decoration: const InputDecoration(
-                labelText: "Nom complet",
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.person),
+              decoration: InputDecoration(
+                labelText: TranslationService.getString('full_name'),
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.person),
               ),
             ),
 
@@ -135,10 +136,10 @@ class _InscriptionPageState extends State<InscriptionPage> {
 
             TextField(
               controller: loginController,
-              decoration: const InputDecoration(
-                labelText: "Email",
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.email),
+              decoration: InputDecoration(
+                labelText: TranslationService.getString('email'),
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.email),
               ),
             ),
 
@@ -148,7 +149,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
               controller: passwordController,
               obscureText: hidePassword,
               decoration: InputDecoration(
-                labelText: "Mot de passe",
+                labelText: TranslationService.getString('password'),
                 border: const OutlineInputBorder(),
                 prefixIcon: const Icon(Icons.lock),
                 suffixIcon: IconButton(
@@ -170,7 +171,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
               controller: confirmController,
               obscureText: hideConfirm,
               decoration: InputDecoration(
-                labelText: "Confirmer mot de passe",
+                labelText: TranslationService.getString('confirm'),
                 border: const OutlineInputBorder(),
                 prefixIcon: const Icon(Icons.lock_outline),
                 suffixIcon: IconButton(
@@ -195,7 +196,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                 onPressed: isLoading ? null : onRegister,
                 child: isLoading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text("S'inscrire"),
+                    : Text(TranslationService.getString('create_account')),
               ),
             ),
 
@@ -206,7 +207,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
                 Navigator.of(context).pop();
                 Navigator.pushNamed(context, '/authentification');
               },
-              child: const Text("Déjà un compte ? Connexion"),
+              child: Text(TranslationService.getString('connexion')),
             ),
           ],
         ),

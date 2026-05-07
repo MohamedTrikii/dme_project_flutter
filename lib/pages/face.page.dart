@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import '../services/translation.service.dart';
 
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
@@ -50,20 +51,20 @@ class _FacePageState extends State<FacePage> {
     final List<Face> faces = await detector.processImage(inputImage);
 
     if (faces.isEmpty) {
-      result = "Aucun visage détecté";
+      result = TranslationService.getString('no_face_detected');
     } else {
-      result = "Visages détectés : ${faces.length}\n\n";
+      result = "${TranslationService.getString('faces_detected')} : ${faces.length}\n\n";
 
       for (int i = 0; i < faces.length; i++) {
         Face f = faces[i];
 
-        result += "Visage ${i + 1}\n";
+        result += "${TranslationService.getString('face')} ${i + 1}\n";
         result +=
-        "Sourire : ${f.smilingProbability?.toStringAsFixed(2) ?? "N/A"}\n";
+        "${TranslationService.getString('smiling')} : ${f.smilingProbability?.toStringAsFixed(2) ?? "N/A"}\n";
         result +=
-        "Œil gauche ouvert : ${f.leftEyeOpenProbability?.toStringAsFixed(2) ?? "N/A"}\n";
+        "${TranslationService.getString('left_eye_open')} : ${f.leftEyeOpenProbability?.toStringAsFixed(2) ?? "N/A"}\n";
         result +=
-        "Œil droit ouvert : ${f.rightEyeOpenProbability?.toStringAsFixed(2) ?? "N/A"}\n\n";
+        "${TranslationService.getString('right_eye_open')} : ${f.rightEyeOpenProbability?.toStringAsFixed(2) ?? "N/A"}\n\n";
       }
     }
 
@@ -94,7 +95,7 @@ class _FacePageState extends State<FacePage> {
 
     final RecognizedText text = await textRecognizer.processImage(inputImage);
 
-    result = text.text.isEmpty ? "Aucun texte détecté" : text.text;
+    result = text.text.isEmpty ? TranslationService.getString('no_text_detected') : text.text;
 
     await textRecognizer.close();
 
@@ -126,9 +127,9 @@ class _FacePageState extends State<FacePage> {
     );
 
     if (barcodes.isEmpty) {
-      result = "Aucun code détecté";
+      result = TranslationService.getString('no_code_detected');
     } else {
-      result = barcodes.map((b) => b.rawValue ?? "Valeur inconnue").join("\n");
+      result = barcodes.map((b) => b.rawValue ?? TranslationService.getString('unknown_value')).join("\n");
     }
 
     await barcodeScanner.close();
@@ -145,7 +146,7 @@ class _FacePageState extends State<FacePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Scanner IA (Multi-outils)"),
+        title: Text(TranslationService.getString('ia_scanner')),
         backgroundColor: Colors.green,
       ),
       body: Padding(
@@ -171,7 +172,15 @@ class _FacePageState extends State<FacePage> {
               children: [
                 ElevatedButton(
                   onPressed: detectFace,
-                  child: const Text("Scanner Visage"),
+                  child: Text(TranslationService.getString('scan_face')),
+                ),
+                ElevatedButton(
+                  onPressed: scanText,
+                  child: Text(TranslationService.getString('scan_text')),
+                ),
+                ElevatedButton(
+                  onPressed: scanBarcode,
+                  child: Text(TranslationService.getString('scan_qr')),
                 ),
               ],
             ),

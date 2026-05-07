@@ -32,7 +32,7 @@ class _PatientsPageState extends State<PatientsPage> {
             Align(
               alignment: Alignment.centerRight,
               child: FormHelper.submitButton(
-                "Ajout",
+                TranslationService.getString('add'),
                     () {
                   Navigator.push(
                     context,
@@ -67,11 +67,11 @@ class _PatientsPageState extends State<PatientsPage> {
 
         if (patients.hasError) {
           print(patients.error);
-          return Text("Erreur");
+          return Text(TranslationService.getString('error'));
         }
 
         if (!patients.hasData || patients.data!.isEmpty) {
-          return Text("Aucun patient");
+          return Text(TranslationService.getString('no_patients'));
         }
         return Center(child: CircularProgressIndicator());
       },
@@ -111,9 +111,9 @@ class _PatientsPageState extends State<PatientsPage> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: const Text("Supprimer Patient"),
-                content: const Text(
-                  "Etes vous sur de vouloir supprimer ce patient?",
+                title: Text(TranslationService.getString('delete_patient')),
+                content: Text(
+                  TranslationService.getString('confirm_delete_patient'),
                 ),
                 actions: [
                   Row(
@@ -121,7 +121,7 @@ class _PatientsPageState extends State<PatientsPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       FormHelper.submitButton(
-                        "Oui",
+                        TranslationService.getString('yes'),
                             () {
                           patientService.supprimerPatient(p).then((value) {
                             setState(() {
@@ -136,7 +136,7 @@ class _PatientsPageState extends State<PatientsPage> {
                       ),
                       const SizedBox(width: 20),
                       FormHelper.submitButton(
-                        "Non",
+                        TranslationService.getString('no'),
                             () {
                           Navigator.of(context).pop();
                         },

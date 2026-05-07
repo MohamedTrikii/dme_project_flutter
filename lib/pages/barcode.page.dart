@@ -80,7 +80,7 @@ class _BarcodePageState extends State<BarcodePage> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Code: $code"),
+              Text("${TranslationService.getString('code')}: $code"),
               const SizedBox(height: 10),
               TextField(
                 controller: nomController,
@@ -165,8 +165,8 @@ class _BarcodePageState extends State<BarcodePage> {
                             if (medicamentTrouve != null) ...[
                               const Icon(Icons.check_circle, color: Colors.green, size: 60),
                               const SizedBox(height: 10),
-                              Text("Nom : ${medicamentTrouve!.nom}", style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                              Text("Label : ${medicamentTrouve!.label}", style: const TextStyle(fontSize: 16)),
+                              Text("${TranslationService.getString('name')} : ${medicamentTrouve!.nom}", style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                              Text("${TranslationService.getString('label')} : ${medicamentTrouve!.label}", style: const TextStyle(fontSize: 16)),
                             ],
                             if (unknownBarcode != null) ...[
                                Text(TranslationService.getString('med_not_found'), style: const TextStyle(color: Colors.red, fontSize: 18)),

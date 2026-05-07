@@ -148,15 +148,15 @@ class _OCRPageState extends State<OCRPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Confirmer les données"),
+          title: Text(TranslationService.getString('confirm_data')),
           content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Nom: ${patient.nom ?? "-"}"),
-                Text("Prénom: ${patient.prenom ?? "-"}"),
+                Text("${TranslationService.getString('name')}: ${patient.nom ?? "-"}"),
+                Text("${TranslationService.getString('first_name')}: ${patient.prenom ?? "-"}"),
                 const SizedBox(height: 10),
-                const Text("Diagnostic:"),
+                Text("${TranslationService.getString('diagnostic')}:"),
                 Text(
                   patient.diagnostic ?? "-",
                   maxLines: 5,
@@ -168,11 +168,11 @@ class _OCRPageState extends State<OCRPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text("Annuler"),
+              child: Text(TranslationService.getString('cancel')),
             ),
             ElevatedButton(
               onPressed: () => Navigator.pop(context, true),
-              child: const Text("Confirmer"),
+              child: Text(TranslationService.getString('confirm')),
             ),
           ],
         );
@@ -212,7 +212,7 @@ class _OCRPageState extends State<OCRPage> {
 
     if (recognizedText.text.trim().isEmpty) {
       setState(() {
-        result = "Aucun texte détecté";
+        result = TranslationService.getString('no_text_detected');
         isLoading = false;
       });
       return;
@@ -280,7 +280,7 @@ class _OCRPageState extends State<OCRPage> {
               const Center(child: CircularProgressIndicator()),
 
             if (result.isNotEmpty && !isLoading) ...[
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   TranslationService.getString('last_result'),
@@ -311,7 +311,7 @@ class _OCRPageState extends State<OCRPage> {
 
             const SizedBox(height: 30),
 
-            const Align(
+            Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 TranslationService.getString('prescription_list'),
@@ -333,7 +333,7 @@ class _OCRPageState extends State<OCRPage> {
                     margin: const EdgeInsets.only(bottom: 10),
                     child: ListTile(
                       leading: const Icon(Icons.description, color: Colors.blue),
-                      title: Text("Ordonnance du ${item['date']}"),
+                      title: Text("${TranslationService.getString('prescription_on')} ${item['date']}"),
                       subtitle: Text(
                         item['translated'].toString().isNotEmpty 
                           ? item['translated'] 
@@ -345,15 +345,15 @@ class _OCRPageState extends State<OCRPage> {
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
-                            title: Text("Détails Ordonnance - ${item['date']}"),
+                            title: Text("${TranslationService.getString('prescription_details')} - ${item['date']}"),
                             content: SingleChildScrollView(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text("Texte Original :", style: TextStyle(fontWeight: FontWeight.bold)),
+                                  Text("${TranslationService.getString('original_text')} :", style: const TextStyle(fontWeight: FontWeight.bold)),
                                   Text(item['original']),
                                   const SizedBox(height: 10),
-                                  const Text("Texte Traduit :", style: TextStyle(fontWeight: FontWeight.bold)),
+                                  Text("${TranslationService.getString('translated_text')} :", style: const TextStyle(fontWeight: FontWeight.bold)),
                                   Text(item['translated']),
                                 ],
                               ),
@@ -361,7 +361,7 @@ class _OCRPageState extends State<OCRPage> {
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(context),
-                                child: const Text("Fermer"),
+                                child: Text(TranslationService.getString('close')),
                               ),
                             ],
                           ),

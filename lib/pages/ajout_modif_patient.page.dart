@@ -4,6 +4,7 @@ import 'package:snippet_coder_utils/FormHelper.dart';
 import '../model/patient.model.dart';
 import '../services/patient.service.dart';
 import '../services/historique.service.dart';
+import '../services/translation.service.dart';
 
 class AjoutModifPatientPage extends StatefulWidget {
   final Patient? patient;
@@ -34,7 +35,9 @@ class _AjoutModifPatientPageState extends State<AjoutModifPatientPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.modifMode ? "Modifier Patient" : "Ajouter Patient"),
+        title: Text(widget.modifMode 
+          ? TranslationService.getString('edit_patient') 
+          : TranslationService.getString('add_patient')),
         backgroundColor: Colors.green,
       ),
 
@@ -46,7 +49,9 @@ class _AjoutModifPatientPageState extends State<AjoutModifPatientPage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             FormHelper.submitButton(
-              widget.modifMode ? "Modifier" : "Ajouter",
+              widget.modifMode 
+                ? TranslationService.getString('edit') 
+                : TranslationService.getString('add'),
               () async {
                 if (validateAndSave()) {
                   bool success = false;
@@ -68,8 +73,8 @@ class _AjoutModifPatientPageState extends State<AjoutModifPatientPage> {
                     Navigator.pop(context, true);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Erreur lors de l'opération"),
+                      SnackBar(
+                        content: Text(TranslationService.getString('operation_error')),
                       ),
                     );
                   }
@@ -81,7 +86,7 @@ class _AjoutModifPatientPageState extends State<AjoutModifPatientPage> {
             ),
 
             FormHelper.submitButton(
-              "Annuler",
+              TranslationService.getString('cancel'),
               () {
                 Navigator.pop(context);
               },
@@ -104,7 +109,7 @@ class _AjoutModifPatientPageState extends State<AjoutModifPatientPage> {
           field(
             context: context,
             name: "nom",
-            label: "Nom",
+            label: TranslationService.getString('name'),
             icon: Icons.person,
             initial: patient.nom,
             onSaved: (val) => patient.nom = val,
@@ -114,7 +119,7 @@ class _AjoutModifPatientPageState extends State<AjoutModifPatientPage> {
           field(
             context: context,
             name: "prenom",
-            label: "Prénom",
+            label: TranslationService.getString('first_name'),
             icon: Icons.person_outline,
             initial: patient.prenom,
             onSaved: (val) => patient.prenom = val,
@@ -124,7 +129,7 @@ class _AjoutModifPatientPageState extends State<AjoutModifPatientPage> {
           field(
             context: context,
             name: "cin",
-            label: "CIN",
+            label: TranslationService.getString('cin'),
             icon: Icons.badge,
             initial: patient.cin,
             onSaved: (val) => patient.cin = val,
@@ -134,7 +139,7 @@ class _AjoutModifPatientPageState extends State<AjoutModifPatientPage> {
           field(
             context: context,
             name: "email",
-            label: "Email",
+            label: TranslationService.getString('email'),
             icon: Icons.email,
             initial: patient.email,
             onSaved: (val) => patient.email = val,
@@ -144,7 +149,7 @@ class _AjoutModifPatientPageState extends State<AjoutModifPatientPage> {
           field(
             context: context,
             name: "tel",
-            label: "Téléphone",
+            label: TranslationService.getString('phone'),
             icon: Icons.phone,
             initial: patient.tel,
             isNumeric: true,
@@ -155,7 +160,7 @@ class _AjoutModifPatientPageState extends State<AjoutModifPatientPage> {
           field(
             context: context,
             name: "diagnostic",
-            label: "Diagnostic",
+            label: TranslationService.getString('diagnostic'),
             icon: Icons.medical_information,
             initial: patient.diagnostic,
             onSaved: (val) => patient.diagnostic = val,
@@ -181,7 +186,7 @@ class _AjoutModifPatientPageState extends State<AjoutModifPatientPage> {
       "",
       (value) {
         if (value.isEmpty) {
-          return "* Required";
+          return "* ${TranslationService.getString('required')}";
         }
         return null;
       },

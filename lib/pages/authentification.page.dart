@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/faceauth.service.dart';
+import '../services/translation.service.dart';
 
 class AuthentificationPage extends StatefulWidget {
   const AuthentificationPage({super.key});
@@ -46,7 +47,7 @@ class _AuthentificationPageState extends State<AuthentificationPage> {
     final password = passwordController.text.trim();
 
     if (email.isEmpty || password.isEmpty) {
-      showMessage("Veuillez remplir tous les champs");
+      showMessage(TranslationService.getString('fill_all_fields'));
       return;
     }
 
@@ -70,7 +71,7 @@ class _AuthentificationPageState extends State<AuthentificationPage> {
         await prefs.setBool("remember", false);
       }
 
-      showMessage("Connexion réussie");
+      showMessage(TranslationService.getString('login_success'));
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
@@ -78,23 +79,23 @@ class _AuthentificationPageState extends State<AuthentificationPage> {
 
       switch (e.code) {
         case 'user-not-found':
-          message = "Utilisateur introuvable";
+          message = TranslationService.getString('user_not_found');
           break;
 
         case 'wrong-password':
-          message = "Mot de passe incorrect";
+          message = TranslationService.getString('wrong_password');
           break;
 
         case 'invalid-email':
-          message = "Email invalide";
+          message = TranslationService.getString('invalid_email');
           break;
 
         case 'invalid-credential':
-          message = "Identifiants invalides";
+          message = TranslationService.getString('invalid_credential');
           break;
 
         default:
-          message = "Erreur : ${e.message}";
+          message = "${TranslationService.getString('error')} : ${e.message}";
       }
 
       showMessage(message);
@@ -126,7 +127,7 @@ class _AuthentificationPageState extends State<AuthentificationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Connexion"),
+        title: Text(TranslationService.getString('connexion')),
         backgroundColor: Colors.green,
       ),
       body: SingleChildScrollView(
@@ -141,10 +142,10 @@ class _AuthentificationPageState extends State<AuthentificationPage> {
 
             TextField(
               controller: loginController,
-              decoration: const InputDecoration(
-                labelText: "Email",
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.email),
+              decoration: InputDecoration(
+                labelText: TranslationService.getString('email'),
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.email),
               ),
             ),
 
@@ -154,7 +155,7 @@ class _AuthentificationPageState extends State<AuthentificationPage> {
               controller: passwordController,
               obscureText: hidePassword,
               decoration: InputDecoration(
-                labelText: "Mot de passe",
+                labelText: TranslationService.getString('password'),
                 border: const OutlineInputBorder(),
                 prefixIcon: const Icon(Icons.lock),
                 suffixIcon: IconButton(
@@ -175,7 +176,7 @@ class _AuthentificationPageState extends State<AuthentificationPage> {
             CheckboxListTile(
               value: rememberMe,
               contentPadding: EdgeInsets.zero,
-              title: const Text("Se souvenir de moi"),
+              title: Text(TranslationService.getString('remember_me')),
               onChanged: (val) {
                 setState(() {
                   rememberMe = val ?? false;
@@ -192,7 +193,7 @@ class _AuthentificationPageState extends State<AuthentificationPage> {
                 onPressed: isLoading ? null : onLogin,
                 child: isLoading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text("Se connecter"),
+                    : Text(TranslationService.getString('login')),
               ),
             ),
 
@@ -203,7 +204,7 @@ class _AuthentificationPageState extends State<AuthentificationPage> {
                 Navigator.of(context).pop();
                 Navigator.pushNamed(context, '/inscription');
               },
-              child: const Text("Créer un compte"),
+              child: Text(TranslationService.getString('create_account')),
             ),
 
             ElevatedButton(
@@ -218,11 +219,11 @@ class _AuthentificationPageState extends State<AuthentificationPage> {
                 } else {
                   if (!mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Face non reconnue")),
+                    SnackBar(content: Text(TranslationService.getString('face_not_recognized'))),
                   );
                 }
               },
-              child: Text("Connexion par visage"),
+              child: Text(TranslationService.getString('face_login')),
             )
           ],
         ),

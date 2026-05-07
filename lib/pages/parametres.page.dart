@@ -68,7 +68,7 @@ class _ParametresPageState extends State<ParametresPage> {
     );
 
     final text = await translator.translateText(
-      "Bienvenue dans votre application médicale",
+      TranslationService.getString('welcome_medical_app'),
     );
 
     setState(() {
@@ -90,8 +90,8 @@ class _ParametresPageState extends State<ParametresPage> {
         children: [
           // SOUND
           SwitchListTile(
-            title: const Text("Activer sons"),
-            subtitle: const Text("Sons boutons, alertes"),
+            title: Text(TranslationService.getString('enable_sounds')),
+            subtitle: Text(TranslationService.getString('sounds_subtitle')),
             value: son,
             onChanged: (val) async {
               setState(() => son = val);
@@ -103,8 +103,8 @@ class _ParametresPageState extends State<ParametresPage> {
 
           // NOTIFICATIONS
           SwitchListTile(
-            title: const Text("Activer notifications"),
-            subtitle: const Text("Rappels livraisons / stock"),
+            title: Text(TranslationService.getString('enable_notifications')),
+            subtitle: Text(TranslationService.getString('notifications_subtitle')),
             value: notifications,
             onChanged: (val) async {
               setState(() => notifications = val);
@@ -128,10 +128,13 @@ class _ParametresPageState extends State<ParametresPage> {
             items: languageMap.keys
                 .map((lang) => DropdownMenuItem(value: lang, child: Text(lang)))
                 .toList(),
-            onChanged: (val) {
+            onChanged: (val) async {
               setState(() {
                 langue = val!;
               });
+              await LanguageService.changeLanguage(val!);
+              await sauvegarder();
+              await traduireTexte();
             },
           ),
 
@@ -147,7 +150,7 @@ class _ParametresPageState extends State<ParametresPage> {
                 await traduireTexte();
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Success")),
+                  SnackBar(content: Text(TranslationService.getString('success'))),
                 );
               },
               child: Text(TranslationService.getString('apply_settings')),
