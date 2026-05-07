@@ -8,7 +8,7 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 
 class FacePage extends StatefulWidget {
-  const FacePage({Key? key}) : super(key: key);
+  const FacePage({super.key});
 
   @override
   State<FacePage> createState() => _FacePageState();
@@ -145,7 +145,7 @@ class _FacePageState extends State<FacePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Google ML Kit"),
+        title: const Text("Scanner IA (Multi-outils)"),
         backgroundColor: Colors.green,
       ),
       body: Padding(

@@ -1,10 +1,8 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class InscriptionPage extends StatefulWidget {
-  const InscriptionPage({Key? key}) : super(key: key);
+  const InscriptionPage({super.key});
 
   @override
   State<InscriptionPage> createState() => _InscriptionPageState();
@@ -58,7 +56,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
       );
 
       showMessage("Compte créé avec succès");
-
+      if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
       String message = "";

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../config/global.params.dart';
+import '../services/translation.service.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
@@ -11,13 +12,11 @@ class MyDrawer extends StatelessWidget {
       child: ListView(
         children: GlobalParams.menus.map((item) {
           return ListTile(
-            title: Text(item['title']),
+            title: Text(TranslationService.getString(item['key'])),
             leading: item['icon'],
             onTap: () async {
-              final title = item['title'].toString();
               final route = item['route'].toString();
-
-              if (title != 'Déconnexion') {
+              if (route != '/authentification') {
                 Navigator.of(context).pop();
                 Navigator.pushNamed(context, route);
                 return;

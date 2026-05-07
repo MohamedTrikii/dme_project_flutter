@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_mlkit_translation/google_mlkit_translation.dart';
+import '../services/language.service.dart';
+import '../services/translation.service.dart';
 
 class ParametresPage extends StatefulWidget {
-  const ParametresPage({Key? key}) : super(key: key);
+  const ParametresPage({super.key});
 
   @override
   State<ParametresPage> createState() => _ParametresPageState();
@@ -80,7 +82,7 @@ class _ParametresPageState extends State<ParametresPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Paramètres"),
+        title: Text(TranslationService.getString('settings')),
         backgroundColor: Colors.green,
       ),
       body: ListView(
@@ -113,9 +115,9 @@ class _ParametresPageState extends State<ParametresPage> {
           const Divider(),
 
           // LANGUAGE
-          const Text(
-            "Langue",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          Text(
+            TranslationService.getString('language'),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 10),
@@ -126,21 +128,30 @@ class _ParametresPageState extends State<ParametresPage> {
             items: languageMap.keys
                 .map((lang) => DropdownMenuItem(value: lang, child: Text(lang)))
                 .toList(),
-            onChanged: (val) async {
+            onChanged: (val) {
               setState(() {
                 langue = val!;
               });
-
-              await sauvegarder();
-              await traduireTexte();
             },
           ),
 
           const SizedBox(height: 25),
 
-          ElevatedButton(
-            onPressed: traduireTexte,
-            child: const Text("Tester Traduction ML Kit"),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white),
+              onPressed: () async {
+                await sauvegarder();
+                await LanguageService.changeLanguage(langue);
+                await traduireTexte();
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Success")),
+                );
+              },
+              child: Text(TranslationService.getString('apply_settings')),
+            ),
           ),
 
           const SizedBox(height: 20),

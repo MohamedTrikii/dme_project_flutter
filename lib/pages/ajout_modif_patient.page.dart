@@ -3,13 +3,13 @@ import 'package:snippet_coder_utils/FormHelper.dart';
 
 import '../model/patient.model.dart';
 import '../services/patient.service.dart';
+import '../services/historique.service.dart';
 
 class AjoutModifPatientPage extends StatefulWidget {
   final Patient? patient;
   final bool modifMode;
 
-  const AjoutModifPatientPage({Key? key, this.patient, this.modifMode = false})
-    : super(key: key);
+  const AjoutModifPatientPage({super.key, this.patient, this.modifMode = false});
 
   @override
   State<AjoutModifPatientPage> createState() => _AjoutModifPatientPageState();
@@ -53,11 +53,18 @@ class _AjoutModifPatientPageState extends State<AjoutModifPatientPage> {
 
                   if (widget.modifMode) {
                     success = await patientService.modifierPatient(patient);
+                    if (success) {
+                      await HistoriqueService.addAction("Patient modifié : ${patient.nom} ${patient.prenom}");
+                    }
                   } else {
                     success = await patientService.ajouterPatient(patient);
+                    if (success) {
+                      await HistoriqueService.addAction("Patient ajouté : ${patient.nom} ${patient.prenom}");
+                    }
                   }
 
                   if (success) {
+                    if (!context.mounted) return;
                     Navigator.pop(context, true);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(

@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../services/faceauth.service.dart';
 
 class AuthentificationPage extends StatefulWidget {
-  const AuthentificationPage({Key? key}) : super(key: key);
+  const AuthentificationPage({super.key});
 
   @override
   State<AuthentificationPage> createState() => _AuthentificationPageState();
@@ -71,7 +71,7 @@ class _AuthentificationPageState extends State<AuthentificationPage> {
       }
 
       showMessage("Connexion réussie");
-
+      if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
       String message = "Erreur";
@@ -212,8 +212,10 @@ class _AuthentificationPageState extends State<AuthentificationPage> {
                 bool ok = await faceAuth.verifyFace();
 
                 if (ok) {
+                  if (!mounted) return;
                   Navigator.pushReplacementNamed(context, '/home');
                 } else {
+                  if (!mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Face non reconnue")),
                   );

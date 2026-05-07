@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:snippet_coder_utils/list_helper.dart';
 
-import '../menu/drawer.widget.dart';
 import '../model/patient.model.dart';
 import '../services/patient.service.dart';
+import '../services/translation.service.dart';
 import 'ajout_modif_patient.page.dart';
 
 class PatientsPage extends StatefulWidget {
-  const PatientsPage({Key? key}) : super(key: key);
+  const PatientsPage({super.key});
 
   @override
-  _PatientsPageState createState() => _PatientsPageState();
+  State<PatientsPage> createState() => _PatientsPageState();
 }
 
 class _PatientsPageState extends State<PatientsPage> {
@@ -21,8 +21,10 @@ class _PatientsPageState extends State<PatientsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Gestion des Patients")),
-      drawer: MyDrawer(),
+      appBar: AppBar(
+        title: Text(TranslationService.getString('patients')),
+        backgroundColor: Colors.green,
+      ),
       body: Center(
         child: Column(
           children: [
@@ -81,7 +83,13 @@ class _PatientsPageState extends State<PatientsPage> {
       padding: const EdgeInsets.all(8.0),
       child: ListUtils.buildDataTable(
         context,
-        ["Nom", "Prenom", "Telephone", "Diagnostic", "Action"],
+        [
+          TranslationService.getString('name'),
+          TranslationService.getString('first_name'),
+          TranslationService.getString('phone'),
+          TranslationService.getString('diagnostic'),
+          TranslationService.getString('action')
+        ],
         ["nom", "prenom", "tel", "diagnostic", ""],
         false,
         0,

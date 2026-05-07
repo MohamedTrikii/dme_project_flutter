@@ -2,13 +2,35 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../menu/drawer.widget.dart';
+import '../services/historique.service.dart';
+import '../services/translation.service.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int unreadCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshUnreadCount();
+  }
+
+  Future<void> _refreshUnreadCount() async {
+    final count = await HistoriqueService.getUnreadCount();
+    setState(() {
+      unreadCount = count;
+    });
+  }
 
   Future<void> _deconnexion(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
-
+    if (!context.mounted) return;
     Navigator.pushNamedAndRemoveUntil(
       context,
       '/inscription',
@@ -20,9 +42,50 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Accueil DME Intelligent"),
+        title: Text(TranslationService.getString('app_title')),
         backgroundColor: Colors.green,
         actions: [
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.notifications),
+                onPressed: () async {
+                  // Clear count immediately
+                  await HistoriqueService.resetUnreadCount();
+                  setState(() { unreadCount = 0; });
+                  
+                  if (!mounted) return;
+                  await Navigator.pushNamed(context, '/historique');
+                  _refreshUnreadCount();
+                },
+              ),
+              if (unreadCount > 0)
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: Text(
+                      '$unreadCount',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => _deconnexion(context),
@@ -39,47 +102,38 @@ class HomePage extends StatelessWidget {
           crossAxisSpacing: 12,
           mainAxisSpacing: 12,
           children: [
-            // ================= PATIENTS =================
             dashboardCard(
               context,
               icon: Icons.people,
-              title: "Patients",
+              title: TranslationService.getString('patients'),
               color: Colors.blue,
               route: '/patients',
             ),
-
-            // ================= OCR =================
             dashboardCard(
               context,
               icon: Icons.document_scanner,
-              title: "Ordonnances OCR",
+              title: TranslationService.getString('ocr'),
               color: Colors.orange,
               route: '/ocr',
             ),
-
-            // ================= BARCODE =================
             dashboardCard(
               context,
               icon: Icons.qr_code_scanner,
-              title: "Scanner Médicaments",
+              title: TranslationService.getString('barcode'),
               color: Colors.purple,
               route: '/barcode',
             ),
-
-            // ================= FACE =================
             dashboardCard(
               context,
-              icon: Icons.face,
-              title: "Face Recognition",
+              icon: Icons.auto_awesome,
+              title: TranslationService.getString('ia_scanner'),
               color: Colors.red,
               route: '/face',
             ),
-
-            // ================= SETTINGS =================
             dashboardCard(
               context,
               icon: Icons.settings,
-              title: "Paramètres",
+              title: TranslationService.getString('settings'),
               color: Colors.grey,
               route: '/parametres',
             ),
@@ -98,7 +152,7 @@ class HomePage extends StatelessWidget {
   }) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, route);
+        Navigator.pushNamed(context, route).then((_) => _refreshUnreadCount());
       },
       child: Card(
         elevation: 5,
