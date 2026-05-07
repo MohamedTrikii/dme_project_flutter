@@ -21,8 +21,10 @@ class _PatientsPageState extends State<PatientsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Gestion des Patients")),
-      drawer: MyDrawer(),
+      appBar: AppBar(
+        title: Text("Gestion des Patients"),
+        backgroundColor: Colors.green,
+      ),
       body: Center(
         child: Column(
           children: [

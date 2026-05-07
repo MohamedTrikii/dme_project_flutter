@@ -200,6 +200,7 @@ class _AuthentificationPageState extends State<AuthentificationPage> {
 
             TextButton(
               onPressed: () {
+                Navigator.of(context).pop();
                 Navigator.pushNamed(context, '/inscription');
               },
               child: const Text("Créer un compte"),

@@ -205,7 +205,8 @@ class _InscriptionPageState extends State<InscriptionPage> {
 
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, '/authentification');
               },
               child: const Text("Déjà un compte ? Connexion"),
             ),

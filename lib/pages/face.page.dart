@@ -59,11 +59,11 @@ class _FacePageState extends State<FacePage> {
 
         result += "Visage ${i + 1}\n";
         result +=
-            "Sourire : ${f.smilingProbability?.toStringAsFixed(2) ?? "N/A"}\n";
+        "Sourire : ${f.smilingProbability?.toStringAsFixed(2) ?? "N/A"}\n";
         result +=
-            "Œil gauche ouvert : ${f.leftEyeOpenProbability?.toStringAsFixed(2) ?? "N/A"}\n";
+        "Œil gauche ouvert : ${f.leftEyeOpenProbability?.toStringAsFixed(2) ?? "N/A"}\n";
         result +=
-            "Œil droit ouvert : ${f.rightEyeOpenProbability?.toStringAsFixed(2) ?? "N/A"}\n\n";
+        "Œil droit ouvert : ${f.rightEyeOpenProbability?.toStringAsFixed(2) ?? "N/A"}\n\n";
       }
     }
 
@@ -173,14 +173,6 @@ class _FacePageState extends State<FacePage> {
                   onPressed: detectFace,
                   child: const Text("Scanner Visage"),
                 ),
-                ElevatedButton(
-                  onPressed: scanText,
-                  child: const Text("Scanner Texte"),
-                ),
-                ElevatedButton(
-                  onPressed: scanBarcode,
-                  child: const Text("Scanner QR"),
-                ),
               ],
             ),
 
@@ -191,11 +183,11 @@ class _FacePageState extends State<FacePage> {
                 child: isLoading
                     ? const CircularProgressIndicator()
                     : SingleChildScrollView(
-                        child: Text(
-                          result,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ),
+                  child: Text(
+                    result,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
               ),
             ),
           ],
