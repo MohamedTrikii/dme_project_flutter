@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
     if (!context.mounted) return;
     Navigator.pushNamedAndRemoveUntil(
       context,
-      '/inscription',
+      '/authentification',
       (route) => false,
     );
   }
