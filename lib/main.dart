@@ -46,9 +46,9 @@ class _MyAppState extends State<MyApp> {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          initialRoute: '/auth',
+          initialRoute: '/authentification',
           routes: {
-            '/auth': (context) => const AuthentificationPage(),
+            '/authentification': (context) => const AuthentificationPage(),
             '/inscription': (context) => const InscriptionPage(),
             '/home': (context) => const HomePage(),
             '/ocr': (context) => const OCRPage(),
