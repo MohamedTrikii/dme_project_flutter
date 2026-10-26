@@ -1,5 +1,5 @@
 name: dme_flutter
-description: "A new Flutter project."
+description: "DME — Dossier Médical Électronique : patients, OCR d'ordonnances, scan de médicaments, traduction (FR/EN/AR)."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev

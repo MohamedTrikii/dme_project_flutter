@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../model/patient.model.dart';
 
@@ -21,7 +22,7 @@ class PatientService {
       await _firestore.collection(collectionName).add(p.toJson());
       return true;
     } catch (e) {
-      print("Erreur ajout patient: $e");
+      debugPrint("Erreur ajout patient: $e");
       return false;
     }
   }
@@ -36,7 +37,7 @@ class PatientService {
 
       return true;
     } catch (e) {
-      print("Erreur modification patient: $e");
+      debugPrint("Erreur modification patient: $e");
       return false;
     }
   }
@@ -51,7 +52,7 @@ class PatientService {
 
       return true;
     } catch (e) {
-      print("Erreur suppression patient: $e");
+      debugPrint("Erreur suppression patient: $e");
       return false;
     }
   }

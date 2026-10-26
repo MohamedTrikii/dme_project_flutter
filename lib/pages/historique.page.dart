@@ -4,7 +4,7 @@ import '../services/historique.service.dart';
 import '../services/translation.service.dart';
 
 class HistoriquePage extends StatefulWidget {
-  const HistoriquePage({Key? key}) : super(key: key);
+  const HistoriquePage({super.key});
 
   @override
   State<HistoriquePage> createState() => _HistoriquePageState();

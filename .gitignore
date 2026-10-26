@@ -6,3 +6,17 @@ android/app/build/
 .idea/
 .vscode/
 *.log
+*.iml
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+coverage/
+android/local.properties
+android/key.properties
+*.jks
+*.keystore
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+.DS_Store

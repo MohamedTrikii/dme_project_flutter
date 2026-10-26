@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../model/medicament.model.dart';
 
@@ -23,7 +24,7 @@ class MedicamentService {
       await _firestore.collection(collectionName).add(m.toJson());
       return true;
     } catch (e) {
-      print("Erreur ajout medicament: $e");
+      debugPrint("Erreur ajout medicament: $e");
       return false;
     }
   }

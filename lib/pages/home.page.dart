@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                   await HistoriqueService.resetUnreadCount();
                   setState(() { unreadCount = 0; });
                   
-                  if (!mounted) return;
+                  if (!context.mounted) return;
                   await Navigator.pushNamed(context, '/historique');
                   _refreshUnreadCount();
                 },
@@ -160,7 +160,7 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

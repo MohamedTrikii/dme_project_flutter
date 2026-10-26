@@ -214,10 +214,10 @@ class _AuthentificationPageState extends State<AuthentificationPage> {
                 bool ok = await faceAuth.verifyFace();
 
                 if (ok) {
-                  if (!mounted) return;
+                  if (!context.mounted) return;
                   Navigator.pushReplacementNamed(context, '/home');
                 } else {
-                  if (!mounted) return;
+                  if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(TranslationService.getString('face_not_recognized'))),
                   );

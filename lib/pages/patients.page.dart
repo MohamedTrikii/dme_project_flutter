@@ -66,7 +66,7 @@ class _PatientsPageState extends State<PatientsPage> {
         }
 
         if (patients.hasError) {
-          print(patients.error);
+          debugPrint(patients.error.toString());
           return Text(TranslationService.getString('error'));
         }
 
@@ -78,7 +78,7 @@ class _PatientsPageState extends State<PatientsPage> {
     );
   }
 
-  _buildDataTable(List<Patient> listPatients) {
+  Widget _buildDataTable(List<Patient> listPatients) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListUtils.buildDataTable(

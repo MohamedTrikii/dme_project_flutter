@@ -68,8 +68,8 @@ class _AjoutModifPatientPageState extends State<AjoutModifPatientPage> {
                     }
                   }
 
+                  if (!context.mounted) return;
                   if (success) {
-                    if (!context.mounted) return;
                     Navigator.pop(context, true);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(

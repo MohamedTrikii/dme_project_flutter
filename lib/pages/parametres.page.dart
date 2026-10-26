@@ -123,7 +123,7 @@ class _ParametresPageState extends State<ParametresPage> {
           const SizedBox(height: 10),
 
           DropdownButtonFormField<String>(
-            value: langue,
+            initialValue: langue,
             decoration: const InputDecoration(border: OutlineInputBorder()),
             items: languageMap.keys
                 .map((lang) => DropdownMenuItem(value: lang, child: Text(lang)))
