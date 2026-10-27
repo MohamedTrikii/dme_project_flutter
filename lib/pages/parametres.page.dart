@@ -14,6 +14,7 @@ class ParametresPage extends StatefulWidget {
 class _ParametresPageState extends State<ParametresPage> {
   bool son = true;
   bool notifications = true;
+  bool faceUnlock = false;
   String langue = "Français";
 
   String translatedText = "";
@@ -39,6 +40,7 @@ class _ParametresPageState extends State<ParametresPage> {
     setState(() {
       son = prefs.getBool("son") ?? true;
       notifications = prefs.getBool("notifications") ?? true;
+      faceUnlock = prefs.getBool("face_enabled") ?? false;
       langue = prefs.getString("langue") ?? "Français";
     });
   }
@@ -51,6 +53,7 @@ class _ParametresPageState extends State<ParametresPage> {
 
     await prefs.setBool("son", son);
     await prefs.setBool("notifications", notifications);
+    await prefs.setBool("face_enabled", faceUnlock);
     await prefs.setString("langue", langue);
   }
 
@@ -108,6 +111,19 @@ class _ParametresPageState extends State<ParametresPage> {
             value: notifications,
             onChanged: (val) async {
               setState(() => notifications = val);
+              await sauvegarder();
+            },
+          ),
+
+          const Divider(),
+
+          // FACE UNLOCK
+          SwitchListTile(
+            title: Text(TranslationService.getString('enable_face_unlock')),
+            subtitle: Text(TranslationService.getString('face_unlock_subtitle')),
+            value: faceUnlock,
+            onChanged: (val) async {
+              setState(() => faceUnlock = val);
               await sauvegarder();
             },
           ),
